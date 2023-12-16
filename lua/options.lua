@@ -38,6 +38,7 @@ vim.o.autochdir = false
 vim.o.wrap = false
 vim.o.fillchars = 'vert:|'
 vim.g.mapleader = " "
+vim.o.hlsearch = true
 vim.cmd("hi VertSplit ctermfg=bg guifg=bg")
 
 -- vim: ts=2 sts=2 sw=2 et

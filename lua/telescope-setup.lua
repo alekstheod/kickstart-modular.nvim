@@ -76,7 +76,6 @@ end
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader><leader>', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
@@ -85,13 +84,6 @@ vim.keymap.set('n', '<leader>/', function()
     previewer = false,
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
-
-local function telescope_live_grep_open_files()
-  require('telescope.builtin').live_grep {
-    grep_open_files = true,
-    prompt_title = 'Live Grep in Open Files',
-  }
-end
 
 local function get_visual_selection()
   local vstart = vim.fn.getpos("'<")
@@ -105,18 +97,19 @@ local function get_visual_selection()
 end
 
 --require('telescope.builtin').live_grep(lines)
-vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+local ivy = require('telescope.themes').get_ivy({ winblend = 10 })
+local telescope = require('telescope.builtin')
 
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-vim.keymap.set({ 'n', 'v' }, '<S-f>', function() require('telescope.builtin').grep_string(get_visual_selection()) end,
+vim.keymap.set('n', '<leader><leader>', function() telescope.find_files(ivy) end, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>ss', telescope.builtin, { desc = '[S]earch [S]elect Telescope' })
+vim.keymap.set('n', '<leader>gf', telescope.git_files, { desc = 'Search [G]it [F]iles' })
+
+vim.keymap.set('v', '<S-f>', function() telescope.grep_string(ivy, get_visual_selection()) end,
   { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<leader>ag', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<Tab>', require('telescope.builtin').buffers, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<S-f>', function() telescope.live_grep(ivy) end,
+  { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>ag', function() telescope.grep_string(ivy) end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<Tab>', function() telescope.buffers(ivy) end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>re', function() telescope.oldfiles(ivy) end, { desc = '[R]recently opened files' })
 
 -- vim: ts=2 sts=2 sw=2 et

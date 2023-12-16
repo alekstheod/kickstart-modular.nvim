@@ -20,6 +20,7 @@ vim.keymap.set({ 'n', 'v', 'i' }, '<C-Right>', '<Cmd>vertical resize +5<CR>', { 
 vim.keymap.set({ 'n', 'v', 'i' }, '<C-q>', '<Cmd>bd!<CR>', { silent = true })
 vim.keymap.set({ 'n', 'v', }, '<C-\\>', function() vim.fn.system("touch " .. vim.fn.expand("%")) end, { silent = true })
 vim.keymap.set('n', '<Esc><Esc>', '<Cmd>nohlsearch<CR>', { silent = true })
+vim.keymap.set({ 'n', 'v', }, '<C-e>', '<Cmd>e!<CR>', { silent = true })
 
 local function store_buffer_name_to_x_clipboard()
   vim.cmd("echo expand('%:p')")

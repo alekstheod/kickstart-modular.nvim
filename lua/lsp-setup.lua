@@ -53,6 +53,7 @@ local servers = {
   -- rust_analyzer = {},
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
+  bashls = {},
 
   lua_ls = {
     Lua = {

@@ -17,13 +17,17 @@ return {
 		},
 	},
 	config = function()
-		local actions = require("telescope.actions")
-		local action_utils = require("telescope.actions.utils")
+		local actions = function()
+			return require 'telescope.actions'
+		end
+		local action_utils = function()
+			return require 'telescope.actions.utils'
+		end
 
 		local function selection_by_index()
 			local prompt_bufnr = vim.api.nvim_get_current_buf()
 			local results = {}
-			action_utils.map_selections(prompt_bufnr, function(entry)
+			action_utils().map_selections(prompt_bufnr, function(entry)
 				table.insert(results, entry.bufnr)
 			end)
 			return results
@@ -32,7 +36,7 @@ return {
 		local function delete_buffers()
 			local buffers = selection_by_index()
 			for _, v in ipairs(buffers) do
-				local command = "bd! " .. v
+				local command = 'bd! ' .. v
 				vim.api.nvim_command(command)
 			end
 		end
@@ -42,11 +46,11 @@ return {
 					i = {
 						['<C-u>'] = false,
 						['<C-d>'] = false,
-						["<esc>"] = actions.close,
-						["<C-j>"] = actions.move_selection_next,
-						["<C-k>"] = actions.move_selection_previous,
-						["<C-Space>"] = actions.toggle_selection,
-						["<del>"] = delete_buffers,
+						['<esc>'] = actions().close,
+						['<C-j>'] = actions().move_selection_next,
+						['<C-k>'] = actions().move_selection_previous,
+						['<C-Space>'] = actions().toggle_selection,
+						['<del>'] = delete_buffers,
 					},
 				},
 			},

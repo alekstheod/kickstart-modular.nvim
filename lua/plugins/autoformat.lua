@@ -31,6 +31,45 @@ return {
       return _augroups[client.id]
     end
 
+    local function setup_lsp_format(args)
+      local client_id = args.data.client_id
+      local client = vim.lsp.get_client_by_id(client_id)
+      local bufnr = args.buf
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = get_augroup(client),
+        buffer = bufnr,
+        callback = function()
+          if format_is_enabled then
+            vim.lsp.buf.format {
+              async = false,
+              filter = function(c)
+                return c.id == client.id
+              end,
+            }
+          end
+        end,
+      })
+    end
+
+    local function setup_neoformat(args)
+      vim.cmd [[
+		let g:neoformat_enabled_cpp = ['clangformat']
+		let g:neoformat_enabled_bash = ['shfmt']
+	  ]]
+      local client_id = args.data.client_id
+      local client = vim.lsp.get_client_by_id(client_id)
+      local bufnr = args.buf
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = get_augroup(client),
+        buffer = bufnr,
+        callback = function()
+          if format_is_enabled then
+            vim.cmd 'undojoin | Neoformat'
+          end
+        end,
+      })
+    end
+
     -- Whenever an LSP attaches to a buffer, we will run this function.
     --
     -- See `:help LspAttach` for more information about this autocmd event.
@@ -40,39 +79,10 @@ return {
       callback = function(args)
         local client_id = args.data.client_id
         local client = vim.lsp.get_client_by_id(client_id)
-        local bufnr = args.buf
-
-        -- By default use neoformat
-        -- Only attach to clients that support document formatting
         if not client.server_capabilities.documentFormattingProvider then
-          vim.cmd [[
-				let g:neoformat_enabled_cpp = ['clangformat']
-				let g:neoformat_enabled_bash = ['shfmt']
-		  ]]
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            group = get_augroup(client),
-            buffer = bufnr,
-            callback = function()
-              if format_is_enabled then
-                vim.cmd 'undojoin | Neoformat'
-              end
-            end,
-          })
+          setup_neoformat(args)
         else
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            group = get_augroup(client),
-            buffer = bufnr,
-            callback = function()
-              if format_is_enabled then
-                vim.lsp.buf.format {
-                  async = false,
-                  filter = function(c)
-                    return c.id == client.id
-                  end,
-                }
-              end
-            end,
-          })
+          setup_lsp_format(args)
         end
       end,
     })

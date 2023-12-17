@@ -15,15 +15,19 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>fx', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  local telescope = function()
+    return require 'telescope.builtin'
+  end
 
-  nmap('<leader>gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-  nmap('<leader>gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('<leader>gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+  nmap('<leader>fx', vim.lsp.buf.code_action, '[F]i[x]')
+
+  nmap('<leader>gd', telescope().lsp_definitions, '[G]oto [D]efinition')
+  nmap('<leader>gr', telescope().lsp_references, '[G]oto [R]eferences')
+  nmap('<leader>gI', telescope().lsp_implementations, '[G]oto [I]mplementation')
+  nmap('<leader>D', telescope().lsp_type_definitions, 'Type [D]efinition')
+  nmap('<leader>ds', telescope().lsp_document_symbols, '[D]ocument [S]ymbols')
+  nmap('<leader>ws', telescope().lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -36,12 +40,6 @@ end
 require('mason').setup()
 require('mason-lspconfig').setup()
 
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
---
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
@@ -53,7 +51,6 @@ local servers = {
   -- rust_analyzer = {},
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-  bashls = {},
 
   lua_ls = {
     Lua = {

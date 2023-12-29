@@ -8,13 +8,14 @@ require('lazy').setup({
   'machakann/vim-sandwich',
   'dyng/ctrlsf.vim',
   'preservim/nerdcommenter',
+  'mbbill/undotree',
 
   {
     -- vim colorshcemes
     'rafi/awesome-vim-colorschemes',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'jellybeans'
+      vim.cmd.colorscheme 'onedark'
     end,
   },
 

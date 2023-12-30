@@ -22,7 +22,7 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>fx', vim.lsp.buf.code_action, '[F]i[x]')
 
-  nmap('<leader>gd', telescope().lsp_definitions, '[G]oto [D]efinition')
+  nmap('<leader>gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('<leader>gr', telescope().lsp_references, '[G]oto [R]eferences')
   nmap('<leader>gI', telescope().lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', telescope().lsp_type_definitions, 'Type [D]efinition')
@@ -78,12 +78,20 @@ mason_lspconfig.setup {
 
 mason_lspconfig.setup_handlers {
   function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
+    if (server_name == 'omnisharp') then
+      require('lspconfig').omnisharp.setup {
+        enable_editorconfig_support = true,
+        on_attach = on_attach,
+        handlers = { ["textDocument/definition"] = require('omnisharp_extended').handler, },
+      }
+    else
+      require('lspconfig')[server_name].setup {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = servers[server_name],
+        filetypes = (servers[server_name] or {}).filetypes,
+      }
+    end
   end,
 }
 

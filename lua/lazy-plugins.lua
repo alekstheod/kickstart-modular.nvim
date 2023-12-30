@@ -9,6 +9,7 @@ require('lazy').setup({
   'dyng/ctrlsf.vim',
   'preservim/nerdcommenter',
   'mbbill/undotree',
+  'Hoffs/omnisharp-extended-lsp.nvim',
 
   {
     -- vim colorshcemes

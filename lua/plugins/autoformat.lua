@@ -12,9 +12,14 @@ return {
 		let g:neoformat_enabled_bash = ['shfmt']
 	]]
 
-    vim.api.nvim_create_autocmd('BufWritePre', {
+    vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
       callback = function()
-        vim.cmd 'undojoin | Neoformat'
+        print(vim.bo.filetype)
+        if vim.bo.filetype == 'cs' then
+          vim.lsp.buf.format()
+        else
+          vim.cmd 'undojoin | Neoformat'
+        end
       end,
     })
   end,

@@ -14,7 +14,6 @@ return {
 
     vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
       callback = function()
-        print(vim.bo.filetype)
         if vim.bo.filetype == 'cs' then
           vim.lsp.buf.format()
         else

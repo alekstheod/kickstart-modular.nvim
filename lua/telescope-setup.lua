@@ -27,6 +27,7 @@ end
 
 require('telescope').setup {
   defaults = {
+    path_display = { 'smart' },
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -41,10 +42,10 @@ require('telescope').setup {
   },
   extensions = {
     fzf = {
-      fuzzy = true,                   -- false will only do exact matching
+      fuzzy = true, -- false will only do exact matching
       override_generic_sorter = true, -- override the generic sorter
-      override_file_sorter = true,    -- override the file sorter
-      case_mode = "ignore_case",      -- or "ignore_case" or "respect_case"
+      override_file_sorter = true, -- override the file sorter
+      case_mode = 'ignore_case', -- or "ignore_case" or "respect_case"
       -- the default case_mode is "smart_case"
     },
   },
@@ -79,15 +80,26 @@ local telescope = function()
   return require 'telescope.builtin'
 end
 
-vim.keymap.set('n', '<leader><leader>', function() telescope().find_files(ivy()) end, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader><leader>', function()
+  telescope().find_files(ivy())
+end, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>ss', telescope().builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', telescope().git_files, { desc = 'Search [G]it [F]iles' })
 
-vim.keymap.set('v', '<S-f>', function() telescope().grep_string(ivy(), get_visual_selection()) end,
-  { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<S-f>', function() telescope().live_grep(ivy()) end, { desc = '[F]ind text' })
-vim.keymap.set('n', '<leader>ag', function() telescope().grep_string(ivy()) end, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<Tab>', function() telescope().buffers(ivy()) end, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>re', function() telescope().oldfiles(ivy()) end, { desc = '[R]recently opened files' })
+vim.keymap.set('v', '<S-f>', function()
+  telescope().grep_string(ivy(), get_visual_selection())
+end, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<S-f>', function()
+  telescope().live_grep(ivy())
+end, { desc = '[F]ind text' })
+vim.keymap.set('n', '<leader>ag', function()
+  telescope().grep_string(ivy())
+end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<Tab>', function()
+  telescope().buffers(ivy())
+end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>re', function()
+  telescope().oldfiles(ivy())
+end, { desc = '[R]recently opened files' })
 
 -- vim: ts=2 sts=2 sw=2 et

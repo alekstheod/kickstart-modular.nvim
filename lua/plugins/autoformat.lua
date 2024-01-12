@@ -10,6 +10,7 @@ return {
 		let g:neoformat_enabled_cpp = ['clangformat']
 		let g:neoformat_enabled_csharp = ['clangformat']
 		let g:neoformat_enabled_bash = ['shfmt']
+		let g:neoformat_enabled_yaml = ['google_yamlfmt']
 	]]
 
     vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
@@ -17,7 +18,7 @@ return {
         if vim.bo.filetype == 'cs' then
           vim.lsp.buf.format()
         else
-          vim.cmd 'undojoin | Neoformat'
+          vim.cmd 'Neoformat'
         end
       end,
     })

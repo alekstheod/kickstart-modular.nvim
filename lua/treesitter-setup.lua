@@ -12,7 +12,6 @@ vim.defer_fn(function()
     ignore_install = {},
     modules = {},
     highlight = { enable = true },
-    indent = { enable = true },
     textobjects = {
       select = {
         enable = true,

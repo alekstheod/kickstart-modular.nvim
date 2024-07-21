@@ -80,11 +80,14 @@ mason_lspconfig.setup {
 
 mason_lspconfig.setup_handlers {
   function(server_name)
-    if server_name == 'omnisharp' then
-      require('lspconfig').omnisharp.setup {
+    if server_name == 'csharp_ls' then
+      require('lspconfig').csharp_ls.setup {
         enable_editorconfig_support = true,
         on_attach = on_attach,
-        handlers = { ['textDocument/definition'] = require('omnisharp_extended').handler },
+        handlers = {
+          ['textDocument/definition'] = require('csharpls_extended').handler,
+          ['textDocument/typeDefinition'] = require('csharpls_extended').handler,
+        },
       }
     else
       require('lspconfig')[server_name].setup {
